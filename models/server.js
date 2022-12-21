@@ -1,5 +1,6 @@
 const express = require('express')
-const cors = require('cors')
+const cors = require('cors');
+const { dbConnection } = require('../db/config');
 
 
 class Server {
@@ -7,13 +8,29 @@ class Server {
     constructor(){
         this.app = express();
         this.port = process.env.PORT;
-        this.usersPath = '/api/users'
+        // this.usersPath = '/api/users'
+        // this.authPath = '/api/auth'
+        // this.categoriesPath = '/api/categories'
+        this.paths ={
+            auth: '/api/auth',
+            categories: '/api/categories',
+            products: '/api/products',
+            search: '/api/search',
+            users: '/api/users',
+        }
+
+        //Conectar a BD
+        this.connectDB();
 
         // Middlewares
         this.middlewares();
 
         // rutas de mi app
         this.routes();
+    }
+
+    connectDB() {
+        dbConnection()
     }
 
     middlewares() {
@@ -26,7 +43,14 @@ class Server {
     }
 
     routes() {
-        this.app.use(this.usersPath, require('../routes/users'))
+        // this.app.use(this.authPath, require('../routes/auth'))
+        // this.app.use(this.usersPath, require('../routes/users'))
+        // this.app.use(this.categoriesPath, require('../routes/categories'))
+        this.app.use(this.paths.auth, require('../routes/auth'))
+        this.app.use(this.paths.users, require('../routes/users'))
+        this.app.use(this.paths.categories, require('../routes/categories'))
+        this.app.use(this.paths.products, require('../routes/products'))
+        this.app.use(this.paths.search, require('../routes/search'))
     }
 
     listen() {

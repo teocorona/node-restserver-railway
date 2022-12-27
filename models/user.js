@@ -30,7 +30,8 @@ const UserSchema = Schema({
     google: {
         type: Boolean,
         default: false
-    }
+    },
+    img: {type: String},
 });
 
 UserSchema.methods.toJSON = function () {
